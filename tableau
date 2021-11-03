@@ -1,0 +1,217 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "f0913c8f-d215-4fcc-a7c4-798162e0d373",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "val dicho : 'a -> 'a array -> bool = <fun>\n"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "let dicho e t =\n",
+    "    let rec aux i j = \n",
+    "    if i > j then false \n",
+    "    else if t.(i) = e || t.(j) = e then true\n",
+    "    else let p = (i+j)/2 in\n",
+    "    if t.(p) = e then true\n",
+    "    else if e > t.(p) then aux (p+1) j\n",
+    "    else aux i (p-1) in\n",
+    "aux 0 (Array.length t -1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "cf95a99e-6500-4262-ba3f-95ee87cd6c79",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "- : bool = true\n"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "dicho 4 [|1;3;3;4;6|]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "f4a4c267-9fda-4cd2-9bec-c789e46a7f02",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "val tricho : 'a -> 'a array -> bool = <fun>\n"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "let tricho e t = \n",
+    "    let rec aux i j =\n",
+    "    if i > j then false\n",
+    "    else if t.(i) = e || t.(j) = e then true\n",
+    "    else let p = (i+j)/3 and q = 2*(i+j)/3 in\n",
+    "    if t.(p) = e || t.(q) = e then true \n",
+    "    else if t.(p) > e then aux i (p-1)\n",
+    "    else if t.(q) < e then aux (q+1) j\n",
+    "    else aux (p+1) (q-1) in\n",
+    "aux 0 (Array.length t -1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "cacfbf88-42ae-409d-95fd-d9f7e8120e83",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "- : bool = true\n"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "ename": "interrupt",
+     "evalue": "intterupt",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[31mException: Sys.Break.\u001b[0m"
+     ]
+    }
+   ],
+   "source": [
+    "dicho 4 [|1;3;3;4;6|]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "a10710e1-fcb8-4a47-a09a-af31c87f7ee3",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "val split : 'a list -> 'a list * 'a list = <fun>\n"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "val concat : 'a list -> 'a list -> 'a list = <fun>\n"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "val tri : 'a list -> 'a list = <fun>\n"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "let rec split = function \n",
+    "    |[] -> [], []\n",
+    "    |[e] -> [e], []\n",
+    "    |e1::e2::q -> let q1, q2 = split q in \n",
+    "                  e1::q1, e2::q2;;\n",
+    "                  \n",
+    "let rec concat l1 l2 = match l1, l2 with\n",
+    "    |[], _-> l2\n",
+    "    |_, [] -> l1\n",
+    "    |e1::q1, e2::q2 when e1 < e2 -> e1::(concat q1 l2)\n",
+    "    |e1::q1, e2::q2 -> e2::(concat l1 q2);;\n",
+    "    \n",
+    "let rec tri = function\n",
+    "    |[] -> []\n",
+    "    |[e] -> [e]\n",
+    "    |l -> let l1, l2 = split l in\n",
+    "        concat (tri l1) (tri l2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "b07a8823-7e6f-4312-a65e-6f3e39836961",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "- : int list = [1; 2; 3; 3; 4; 4; 5; 5; 6; 6; 7; 8; 9; 9]\n"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tri [4;9;3;4;2;6;8;5;7;9;6;1;3;5]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "eb369162-aa51-434a-be30-52c689b9e1bf",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "OCaml default",
+   "language": "OCaml",
+   "name": "ocaml-jupyter"
+  },
+  "language_info": {
+   "codemirror_mode": "text/x-ocaml",
+   "file_extension": ".ml",
+   "mimetype": "text/x-ocaml",
+   "name": "OCaml",
+   "nbconverter_exporter": null,
+   "pygments_lexer": "OCaml",
+   "version": "4.08.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
